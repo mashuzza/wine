@@ -1,23 +1,45 @@
-library(readr)
+## Let's explore the wine ratings dataselt
+
+
+## our favorite package 
 library(tidyverse)
 
-
+## load the data - thanks TidyTuesday!
 wine_ratings <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-05-28/winemag-data-130k-v2.csv")
 
+## save the datafile
 write.csv(wine_ratings, file = "WineRarings.csv",row.names=FALSE, na="")
 
+# #initial quick stats
 head(wine_ratings)
 str(wine_ratings)
+
 summary(wine_ratings)
 
-
+## Top 10 countries represented in the dataset
 countries<-wine_ratings%>% count(country) %>% arrange(desc(n)) %>% top_n(10) 
-ggplot(data = countries, aes(x = reorder(country,-n),y = n)) + geom_bar(stat="identity") 
 
-varieties<-wine_ratings%>% count(variety) %>% arrange(desc(n)) %>% top_n(100) %>% print(n=100)
-ggplot(data = varieties, aes(x = reorder(varieties,-n),y = n)) + 
-  geom_bar(stat="identity")  +
-  theme_bw()
+ggplot(data = countries, aes(x = reorder(country,-n), y = n)) + 
+  geom_bar(stat="identity", col = "black", fill = "darkgray") +
+  labs(title = "# of rated wines by country", 
+       x = '',
+       y = '') +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) # rotate the labels on x axis
+
+## most rated wines by variety
+varieties<-wine_ratings %>% count(variety) %>% arrange(desc(n)) %>% top_n(20)
+ggplot(data = varieties, aes(x = reorder(variety,-n), y = n)) + 
+  geom_bar(stat="identity", col = "black", fill = "darkgray")  +
+  labs(title = "Top 20 Most Rated Wines", 
+       x = '',
+       y = '') +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+## most rated wines by variety by country
+
+
 
 
 ## see mean scores by country
