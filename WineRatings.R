@@ -15,7 +15,9 @@ countries<-wine_ratings%>% count(country) %>% arrange(desc(n)) %>% top_n(10)
 ggplot(data = countries, aes(x = reorder(country,-n),y = n)) + geom_bar(stat="identity") 
 
 varieties<-wine_ratings%>% count(variety) %>% arrange(desc(n)) %>% top_n(100) %>% print(n=100)
-ggplot(data = varieties, aes(x = reorder(varieties,-n),y = n)) + geom_bar(stat="identity") 
+ggplot(data = varieties, aes(x = reorder(varieties,-n),y = n)) + 
+  geom_bar(stat="identity")  +
+  theme_bw()
 
 
 ## see mean scores by country
@@ -27,7 +29,8 @@ wine_ratings%>%filter(variety == 'Sauvignon Blanc' & !is.na(country)) %>% group_
 ##  keep countries with n >30
 wine_ratings%>%filter(variety == 'Sauvignon Blanc') %>% group_by(country) %>% filter(n() >30) %>% 
   group_by(country) %>% 
-  ggplot(aes(x = reorder(country, points), y = points)) + geom_boxplot()
+  ggplot(aes(x = reorder(country, points), y = points)) + geom_boxplot() +
+  theme_bw()
 
 ## see prices
 wine_ratings%>%filter(variety == 'Sauvignon Blanc') %>% group_by(country) %>% filter(n() >30) %>% 
