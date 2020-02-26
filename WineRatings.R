@@ -1,5 +1,4 @@
-## Let's explore the wine ratings dataselt
-
+## Let's explore the wine ratings dataset
 
 ## our favorite package 
 library(tidyverse)
@@ -8,7 +7,7 @@ library(tidyverse)
 wine_ratings <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-05-28/winemag-data-130k-v2.csv")
 
 ## save the datafile
-write.csv(wine_ratings, file = "WineRarings.csv",row.names=FALSE, na="")
+write.csv(wine_ratings, file = "WineRatings.csv",row.names=FALSE, na="")
 
 # #initial quick stats
 head(wine_ratings)
@@ -37,12 +36,8 @@ ggplot(data = varieties, aes(x = reorder(variety,-n), y = n)) +
   theme_bw() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-## most rated wines by variety by country
 
-
-
-
-## see mean scores by country
+## see mean scores for Sauvignon Blanc by country
 wine_ratings%>%filter(variety == 'Sauvignon Blanc' & !is.na(country)) %>% group_by(country) %>% 
   summarize(mean_score = mean(points, na.rm = T), n = n()) %>% 
   ungroup() %>% 
@@ -52,7 +47,13 @@ wine_ratings%>%filter(variety == 'Sauvignon Blanc' & !is.na(country)) %>% group_
 wine_ratings%>%filter(variety == 'Sauvignon Blanc') %>% group_by(country) %>% filter(n() >30) %>% 
   group_by(country) %>% 
   ggplot(aes(x = reorder(country, points), y = points)) + geom_boxplot() +
-  theme_bw()
+  labs(title = "Sauvignon Blanc Raitings by Country", 
+       subtitle = 'Based on 30+ ratings',
+       x = '',
+       y = '') +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
 
 ## see prices
 wine_ratings%>%filter(variety == 'Sauvignon Blanc') %>% group_by(country) %>% filter(n() >30) %>% 
@@ -77,10 +78,23 @@ wine_ratings%>%filter(variety == 'Sauvignon Blanc') %>% group_by(country) %>% fi
 wine_ratings%>%filter(variety == 'Sauvignon Blanc') %>% select(title) %>%
   mutate(Vintage = parse_number(title), Vintage2 = parse_integer(title)) %>% print(n=39) 
 
+## price sanity check
 
+wine_ratings %>% select(title, points, price) %>%arrange(desc(price)) %>% top_n(20) 
 
+## Most expensive wine looks suspicious due to 88 points!
 
+plot(wine_ratings$points, wine_ratings$price)
 
+ggplot(data = wine_ratings, aes(x = points, y = price)) +
+  geom_point(shape = 21,col = "black", fill = 'darkgray', alpha = 0.7) +
+  ##geom_jitter(width = 0.25, alpha = 0.5) +
+  labs(title = "Do wines with higher ratings cost more?", 
+       ##subtitle = 'Based on 30+ ratings',
+       x = 'Points',
+       y = 'Price') +
+  theme_bw() 
+  
 
 
 
