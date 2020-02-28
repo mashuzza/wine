@@ -79,6 +79,13 @@ wine_ratings%>%filter(variety == 'Sauvignon Blanc') %>% select(title) %>%
   mutate(Vintage = parse_number(title), Vintage2 = parse_integer(title)) %>% print(n=39) 
 
 ## price sanity check
+<<<<<<< HEAD
+=======
+
+wine_ratings %>% select(title, points, price) %>%arrange(desc(price)) %>% top_n(20) 
+
+## Most expensive wine looks suspicious due to 88 points!
+>>>>>>> 11c1d3a48566e6ccbd01acf144c1693264a2304b
 
 wine_ratings %>% select(title, points, price) %>%arrange(desc(price)) %>% top_n(20) 
 
